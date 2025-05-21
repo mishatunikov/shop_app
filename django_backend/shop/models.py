@@ -7,7 +7,7 @@ class CreatedUpdatedAt(models.Model):
     """Abstract model with creation and update datetime."""
 
     created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -29,6 +29,19 @@ class BaseName(models.Model):
         return self.name
 
 
+class BaseCategory(BaseName):
+    """Abstract base category model."""
+
+    slug = models.SlugField(
+        max_length=consts.MAX_SLUG_LENGTH,
+        verbose_name='идентификатор',
+        unique=True,
+    )
+
+    class Meta(BaseName.Meta):
+        abstract = True
+
+
 class TgUser(CreatedUpdatedAt):
     """Telegram User model."""
 
@@ -46,10 +59,14 @@ class TgUser(CreatedUpdatedAt):
     first_name = models.CharField(
         max_length=consts.MAX_NAME_LENGTH,
         blank=True,
+        null=True,
         verbose_name='имя',
     )
     last_name = models.CharField(
-        max_length=consts.MAX_NAME_LENGTH, blank=True, verbose_name='фамилия'
+        max_length=consts.MAX_NAME_LENGTH,
+        null=True,
+        blank=True,
+        verbose_name='фамилия',
     )
     is_active = models.BooleanField(default=True, verbose_name='активен')
 
@@ -61,21 +78,15 @@ class TgUser(CreatedUpdatedAt):
         return f'User(tg_id={self.tg_id})'
 
 
-class Category(BaseName, CreatedUpdatedAt):
+class Category(BaseCategory, CreatedUpdatedAt):
     """Category model."""
 
-    slug = models.SlugField(
-        max_length=consts.MAX_SLUG_LENGTH,
-        verbose_name='идентификатор',
-        unique=True,
-    )
-
-    class Meta(BaseName.Meta):
+    class Meta(BaseCategory.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
 
-class SubCategory(Category):
+class SubCategory(BaseCategory, CreatedUpdatedAt):
     """Subcategory model."""
 
     category = models.ForeignKey(
@@ -85,7 +96,7 @@ class SubCategory(Category):
         related_name='subcategories',
     )
 
-    class Meta(Category.Meta):
+    class Meta(BaseCategory.Meta):
         verbose_name = 'подкатегория'
         verbose_name_plural = 'Подкатегории'
 
