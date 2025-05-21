@@ -5,3 +5,4 @@ aiogram_dialog
 fluentogram
 redis
 environs
+django-cleanup
