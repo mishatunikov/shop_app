@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import UniqueConstraint
 from shop import consts
 
 
@@ -99,6 +100,11 @@ class SubCategory(BaseCategory, CreatedUpdatedAt):
     class Meta(BaseCategory.Meta):
         verbose_name = 'подкатегория'
         verbose_name_plural = 'Подкатегории'
+        constraints = [
+            UniqueConstraint(
+                fields=('name', 'category'), name='unique_name_category'
+            )
+        ]
 
 
 class Item(BaseName, CreatedUpdatedAt):
@@ -127,6 +133,11 @@ class Item(BaseName, CreatedUpdatedAt):
     class Meta(BaseName.Meta):
         verbose_name = 'товар'
         verbose_name_plural = 'Товары'
+        constraints = [
+            UniqueConstraint(
+                fields=('name', 'subcategory'), name='unique_name_subcategory'
+            )
+        ]
 
 
 class ShoppingCart(CreatedUpdatedAt):
@@ -162,6 +173,7 @@ class ShoppingCartItems(CreatedUpdatedAt):
         verbose_name_plural = 'Товары корзины'
         constraints = [
             models.UniqueConstraint(
-                fields=('shopping_cart', 'item'), name='item_shopping_cart'
+                fields=('shopping_cart', 'item'),
+                name='unique_item_shopping_cart',
             )
         ]
