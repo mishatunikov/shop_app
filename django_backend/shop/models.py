@@ -30,19 +30,6 @@ class BaseName(models.Model):
         return self.name
 
 
-class BaseCategory(BaseName):
-    """Abstract base category model."""
-
-    slug = models.SlugField(
-        max_length=consts.MAX_SLUG_LENGTH,
-        verbose_name='идентификатор',
-        unique=True,
-    )
-
-    class Meta(BaseName.Meta):
-        abstract = True
-
-
 class TgUser(CreatedUpdatedAt):
     """Telegram User model."""
 
@@ -79,15 +66,19 @@ class TgUser(CreatedUpdatedAt):
         return f'User(tg_id={self.tg_id})'
 
 
-class Category(BaseCategory, CreatedUpdatedAt):
+class Category(BaseName, CreatedUpdatedAt):
     """Category model."""
 
-    class Meta(BaseCategory.Meta):
+    name = models.CharField(
+        max_length=consts.MAX_NAME_LENGTH, verbose_name='название', unique=True
+    )
+
+    class Meta(BaseName.Meta):
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
 
-class SubCategory(BaseCategory, CreatedUpdatedAt):
+class Subcategory(BaseName, CreatedUpdatedAt):
     """Subcategory model."""
 
     category = models.ForeignKey(
@@ -97,7 +88,7 @@ class SubCategory(BaseCategory, CreatedUpdatedAt):
         related_name='subcategories',
     )
 
-    class Meta(BaseCategory.Meta):
+    class Meta(BaseName.Meta):
         verbose_name = 'подкатегория'
         verbose_name_plural = 'Подкатегории'
         constraints = [
@@ -124,7 +115,7 @@ class Item(BaseName, CreatedUpdatedAt):
         ],
     )
     subcategory = models.ForeignKey(
-        SubCategory,
+        Subcategory,
         on_delete=models.CASCADE,
         related_name='items',
         verbose_name='подкатегория',
