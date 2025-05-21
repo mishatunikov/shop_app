@@ -101,7 +101,7 @@ class SubCategory(BaseCategory, CreatedUpdatedAt):
         verbose_name_plural = 'Подкатегории'
 
 
-class Item(BaseName):
+class Item(BaseName, CreatedUpdatedAt):
     """Item model."""
 
     description = models.TextField(
