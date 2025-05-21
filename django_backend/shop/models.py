@@ -63,7 +63,7 @@ class TgUser(CreatedUpdatedAt):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return f'User(tg_id={self.tg_id})'
+        return f'{self.__class__.__name__}(tg_id={self.tg_id})'
 
 
 class Category(BaseName, CreatedUpdatedAt):
@@ -131,23 +131,9 @@ class Item(BaseName, CreatedUpdatedAt):
         ]
 
 
-class ShoppingCart(CreatedUpdatedAt):
-    user = models.OneToOneField(
-        TgUser,
-        on_delete=models.CASCADE,
-        related_name='shopping_cart',
-        verbose_name='пользователь',
-    )
-
-    class Meta:
-        ordering = ('user', 'created_at')
-        verbose_name = 'корзина'
-        verbose_name_plural = 'Корзины'
-
-
 class ShoppingCartItems(CreatedUpdatedAt):
-    shopping_cart = models.ForeignKey(
-        ShoppingCart, on_delete=models.CASCADE, related_name='items'
+    user = models.ForeignKey(
+        TgUser, on_delete=models.CASCADE, related_name='shopping_cart_items'
     )
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name='shopping_cart'
@@ -164,7 +150,7 @@ class ShoppingCartItems(CreatedUpdatedAt):
         verbose_name_plural = 'Товары корзины'
         constraints = [
             models.UniqueConstraint(
-                fields=('shopping_cart', 'item'),
+                fields=('user', 'item'),
                 name='unique_item_shopping_cart',
             )
         ]
