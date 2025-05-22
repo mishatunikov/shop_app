@@ -4,8 +4,11 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from config import Config, load_config
+from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
+
+from config import Config, load_config
+from dialogs import start_dialog
 from handlers.user_handlers import router as user_router
 from locales.i18n import create_translator_hub
 from middlewares.outer import TranslatorRunnerMiddleware
@@ -30,7 +33,10 @@ async def main():
 
     dp = Dispatcher()
     dp.workflow_data.update({'_translator_hub': translator_hub})
-    dp.include_router(user_router)
+
+    logger.info('Покдлючение роутеров и диалогов')
+    dp.include_routers(user_router, start_dialog)
+    setup_dialogs(dp)
 
     logger.info('Подключение миддлварей')
     dp.update.middleware(TranslatorRunnerMiddleware())
