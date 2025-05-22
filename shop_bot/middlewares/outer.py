@@ -1,9 +1,10 @@
 from typing import Any, Awaitable, Callable, Dict
 
-import consts
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 from fluentogram import TranslatorHub
+
+import consts
 
 
 class TranslatorRunnerMiddleware(BaseMiddleware):
