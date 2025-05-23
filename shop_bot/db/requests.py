@@ -10,8 +10,7 @@ django.setup()
 import logging
 from asgiref.sync import sync_to_async
 
-from shop.models import TgUser, Category
-
+from shop.models import TgUser, Category, Subcategory
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +31,21 @@ def add_or_create_user(user_id: int, **kwargs) -> TgUser:
 
 
 @sync_to_async
-def get_categories():
+def get_active_categories():
     return (
         Category.objects.annotate(
             items_count=Count('subcategories__items', distinct=True)
         )
         .filter(items_count__gt=0)
+        .values_list('name', flat=True)
+    )
+
+
+@sync_to_async
+def get_active_subcategories(category_name: str):
+    return (
+        Subcategory.objects.filter(category__name=category_name)
+        .annotate(count_items=Count('items'))
+        .filter(count_items__gt=0)
         .values_list('name', flat=True)
     )
