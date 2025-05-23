@@ -10,7 +10,11 @@ start_dialog = Dialog(
     Window(
         Format('{main_menu_text}'),
         Row(
-            Button(Format('{catalog_button}'), id='catalog', on_click=...),
+            Button(
+                Format('{catalog_button}'),
+                id='catalog',
+                on_click=start_next_dialog,
+            ),
             Button(
                 Format('{shopping_cart_button}'),
                 id='shopping_cart',
