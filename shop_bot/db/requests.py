@@ -1,6 +1,7 @@
 import os
 
 import django
+from django.db.models import Sum, Count
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_backend.settings')
 os.environ.update({'DJANGO_ALLOW_ASYNC_UNSAFE': 'true'})
@@ -32,4 +33,10 @@ def add_or_create_user(user_id: int, **kwargs) -> TgUser:
 
 @sync_to_async
 def get_categories():
-    return Category.objects.all()
+    return (
+        Category.objects.annotate(
+            items_count=Count('subcategories__items', distinct=True)
+        )
+        .filter(items_count__gt=0)
+        .values_list('name', flat=True)
+    )
