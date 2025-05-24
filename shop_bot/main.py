@@ -32,7 +32,9 @@ async def main():
     translator_hub: TranslatorHub = create_translator_hub()
 
     dp = Dispatcher()
-    dp.workflow_data.update({'_translator_hub': translator_hub})
+    dp.workflow_data.update(
+        {'_translator_hub': translator_hub, 'config': config}
+    )
 
     logger.info('Покдлючение роутеров и диалогов')
     dp.include_routers(
