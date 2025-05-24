@@ -1,20 +1,19 @@
 import logging
 
-from aiogram import Router
+from aiogram import Bot, F, Router
 from aiogram.filters import (
     KICKED,
     MEMBER,
     ChatMemberUpdatedFilter,
     CommandStart,
 )
-from aiogram.types import ChatMemberUpdated, Message
+from aiogram.types import ChatMemberUpdated, Message, PreCheckoutQuery
 from aiogram_dialog import DialogManager, StartMode
 
-from db.requests import add_or_create_user
+from db.requests import add_or_create_user, clean_shopping_cart
 from dialogs.start_dialog.states import StartSG
 
 router = Router()
-
 
 logger = logging.getLogger(__name__)
 
@@ -43,3 +42,28 @@ async def block_bot(event: ChatMemberUpdated):
 @router.my_chat_member(ChatMemberUpdatedFilter(member_status_changed=MEMBER))
 async def unblock_bot(event: ChatMemberUpdated):
     logger.info(f'Пользователь id={event.from_user.id} разблокировал бота.')
+
+
+@router.pre_checkout_query()
+async def process_pre_checkout_query(
+    pre_checkout_query: PreCheckoutQuery, bot: Bot
+):
+    try:
+        await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+    except Exception as err:
+        logging.error(
+            f"Ошибка при обработке апдейта типа PreCheckoutQuery: {err}"
+        )
+
+
+@router.message(F.successful_payment)
+async def process_successful_payment(
+    message: Message, dialog_manager: DialogManager
+):
+    await message.reply(
+        f"Платеж на сумму {message.successful_payment.total_amount // 100} "
+        f"{message.successful_payment.currency} прошел успешно!"
+    )
+    logging.info(f"Получен платеж от {message.from_user.id}")
+    await clean_shopping_cart(tg_id=message.from_user.id)
+    await dialog_manager.done()

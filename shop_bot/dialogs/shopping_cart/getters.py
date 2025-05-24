@@ -16,6 +16,7 @@ async def cart_main_page_getter(
         tg_id=event_from_user.id
     )
 
+    dialog_manager.dialog_data.update({'total_price': total_price})
     items_output = [
         (
             num,
