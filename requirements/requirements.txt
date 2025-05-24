@@ -6,3 +6,4 @@ fluentogram
 redis
 environs
 django-cleanup
+yookassa
