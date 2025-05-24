@@ -14,5 +14,10 @@ async def start_next_dialog(
 
     await dialog_manager.start(
         state=id_state.get(widget.widget_id),
-        data={'category_page_id': 0, 'subcategory_page_id': 0},
+        data={
+            'category_page_id': 0,
+            'subcategory_page_id': 0,
+            'items_page_id': 0,
+            'item_amount': 1
+        },
     )
