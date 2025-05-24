@@ -80,13 +80,13 @@ async def items_getter(
     }
     item_amount = dialog_manager.start_data.get('item_amount')
     return {
-        'counter': f'{item_number + 1}/{len(items)}',
+        'counter': i18n.counter.items(
+            item_number=item_number + 1, items_amount=len(items)
+        ),
         'item_info': i18n.item.info.text(
             name=item.name,
             description=item.description,
             price=item.price,
-            show_amount='false',
-            amount=0,
         ),
         'image': item.image.path,
         'back': i18n.back.button(),

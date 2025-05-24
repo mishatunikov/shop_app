@@ -2,43 +2,10 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 from django.forms.widgets import Select
-from fluentogram import TranslatorRunner
 
 from db.requests import decrease_shopping_cart, increase_shopping_cart
 from dialogs.catalog_dialog.states import CatalogSG
-
-
-async def change_page(
-    callback: CallbackQuery,
-    widget: Button,
-    dialog_manager: DialogManager,
-    **kwargs,
-):
-    if widget.widget_id in (
-        widget_offset := {
-            'category_previous_page': -1,
-            'category_next_page': 1,
-        }
-    ):
-        dialog_manager.start_data['category_page_id'] += widget_offset[
-            widget.widget_id
-        ]
-    if widget.widget_id in (
-        widget_offset := {
-            'subcategory_previous_page': -1,
-            'subcategory_next_page': 1,
-        }
-    ):
-        dialog_manager.start_data['subcategory_page_id'] += widget_offset[
-            widget.widget_id
-        ]
-
-    if widget.widget_id in (
-        widget_offset := {'previous_item': -1, 'next_item': 1}
-    ):
-        dialog_manager.start_data['items_page_id'] += widget_offset[
-            widget.widget_id
-        ]
+from dialogs.shopping_cart.states import ShoppingCartSG
 
 
 async def back(
@@ -75,24 +42,6 @@ async def choose_subcategory(
     await dialog_manager.switch_to(state=CatalogSG.items)
 
 
-async def change_item_amount(
-    callback: CallbackQuery,
-    widget: Button,
-    dilog_manager: DialogManager,
-):
-    id_offset = {'increase_amount': 1, 'decrease_amount': -1}
-    dilog_manager.start_data['item_amount'] += id_offset[widget.widget_id]
-
-
-async def show_alert_increase(
-    callback: CallbackQuery,
-    widget: Button,
-    dilog_manager: DialogManager,
-):
-    i18n: TranslatorRunner = dilog_manager.middleware_data.get('i18n')
-    await callback.answer(text=i18n.decrease.button.alert())
-
-
 async def update_shopping_cart(
     callback: CallbackQuery, widget: Button, dialog_manager: DialogManager
 ):
@@ -110,3 +59,12 @@ async def update_shopping_cart(
             user_id=callback.from_user.id,
             item_id=item_data['id'],
         )
+
+
+async def open_shopping_cart(
+    callback: CallbackQuery, widget: Button, dialog_manager: DialogManager
+):
+    await dialog_manager.done()
+    await dialog_manager.start(
+        state=ShoppingCartSG.main_page, data={'items_page_id': 0}
+    )

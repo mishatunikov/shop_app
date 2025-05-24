@@ -20,14 +20,17 @@ from dialogs.catalog_dialog.getters import (
 )
 from dialogs.catalog_dialog.handlers import (
     back,
-    change_item_amount,
-    change_page,
     choose_category,
     choose_subcategory,
-    show_alert_increase,
+    open_shopping_cart,
     update_shopping_cart,
 )
 from dialogs.catalog_dialog.states import CatalogSG
+from dialogs.general_handlers import (
+    change_item_amount,
+    change_page,
+    show_alert_increase,
+)
 
 catalog_dialog = Dialog(
     Window(
@@ -135,13 +138,11 @@ catalog_dialog = Dialog(
             when='not_in_cart',
         ),
         Button(Format('{is_added}'), id='is_added', when='item_in_cart'),
-        # Button(
-        #     Format('{cart_out}'),
-        #     id='cart_out',
-        #     when='item_in_cart',
-        #     on_click=update_shopping_cart,
-        # ),
-        Button(Format('{shopping_cart}'), id='shopping_cart'),
+        Button(
+            Format('{shopping_cart}'),
+            id='shopping_cart',
+            on_click=open_shopping_cart,
+        ),
         Button(Format('{back}'), id='back_to_subcategories', on_click=back),
         state=CatalogSG.items,
         getter=items_getter,
@@ -150,14 +151,12 @@ catalog_dialog = Dialog(
         Format('{cart_add_answer}\n'),
         Format('{item_info}'),
         StaticMedia(path=Format('{image}'), type=ContentType.PHOTO),
-        Row(
-            Back(Format('{cancel}')),
-            Button(
-                Format('{confirm}'),
-                id='confirm_cart_add',
-                on_click=update_shopping_cart,
-            ),
+        Button(
+            Format('{confirm}'),
+            id='confirm_cart_add',
+            on_click=update_shopping_cart,
         ),
+        Back(Format('{cancel}')),
         state=CatalogSG.confirm_item_cart_add,
         getter=item_cart_add_getter,
     ),
