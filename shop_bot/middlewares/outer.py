@@ -1,10 +1,11 @@
 from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
-from aiogram.types import TelegramObject
+from aiogram.types import TelegramObject, Message
 from fluentogram import TranslatorHub
 
 import consts
+from config import Config
 
 
 class TranslatorRunnerMiddleware(BaseMiddleware):
@@ -19,3 +20,23 @@ class TranslatorRunnerMiddleware(BaseMiddleware):
             locale=consts.DEFAULT_LOCALE
         )
         return await handler(event, data)
+
+
+class CheckSubscription(BaseMiddleware):
+    async def __call__(
+        self,
+        handler: Callable[[[Message], Dict[str, Any]], Awaitable[Any]],
+        event: Message,
+        data: Dict[str, Any],
+    ) -> Any:
+        config: Config = data.get('config')
+        chat_member = await event.bot.get_chat_member(
+            chat_id=config.bot.chanel, user_id=event.from_user.id
+        )
+        if chat_member.status == 'left':
+            await event.answer(
+                text=f'Подпишитесь на канал {config.bot.chanel}',
+            )
+
+        else:
+            return await handler(event, data)
