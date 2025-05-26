@@ -1,9 +1,16 @@
 import os
+import sys
 from decimal import Decimal
+from pathlib import Path
 
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_backend.settings')
+DJANGO_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(DJANGO_BACKEND_DIR / 'django_backend'))
+
+os.environ.setdefault(
+    'DJANGO_SETTINGS_MODULE', 'django_backend.settings'
+)
 os.environ.update({'DJANGO_ALLOW_ASYNC_UNSAFE': 'true'})
 django.setup()
 
