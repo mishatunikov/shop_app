@@ -20,7 +20,7 @@ from dialogs.shopping_cart.handlers import (
     clean_cart,
     confirm_amount_changing,
     remove_item,
-    send_invoice,
+    place_order,
     show_confirm_alert,
 )
 from dialogs.shopping_cart.states import ShoppingCartSG
@@ -39,7 +39,7 @@ shopping_cart_dialog = Dialog(
             Format('{make_order_button}'),
             id='make_order',
             when='items',
-            on_click=send_invoice,
+            on_click=place_order,
         ),
         Button(
             Format('{change_cart_button}'),

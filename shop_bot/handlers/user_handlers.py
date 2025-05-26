@@ -18,7 +18,7 @@ router = Router()
 logger = logging.getLogger(__name__)
 
 
-@router.message(CommandStart)
+@router.message(CommandStart())
 async def start(message: Message, dialog_manager: DialogManager):
     logger.info(f'Пользователь id={message.from_user.id} активировал бота.')
     await add_or_create_user(
@@ -61,9 +61,15 @@ async def process_successful_payment(
     message: Message, dialog_manager: DialogManager
 ):
     await message.reply(
-        f"Платеж на сумму {message.successful_payment.total_amount // 100} "
-        f"{message.successful_payment.currency} прошел успешно!"
+        f'Платеж на сумму {message.successful_payment.total_amount // 100} '
+        f'{message.successful_payment.currency} прошел успешно!'
     )
-    logging.info(f"Получен платеж от {message.from_user.id}")
+    logging.info(f'Получен платеж от {message.from_user.id}')
+    delivery_data = dialog_manager.dialog_data.get('delivery_data')
+    order_data = [
+        delivery_data,
+        dialog_manager.start_data.get('items_amount'),
+    ]
+
     await clean_shopping_cart(tg_id=message.from_user.id)
     await dialog_manager.done()

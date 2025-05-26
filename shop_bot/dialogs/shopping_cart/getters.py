@@ -16,21 +16,27 @@ async def cart_main_page_getter(
         tg_id=event_from_user.id
     )
 
-    dialog_manager.dialog_data.update({'total_price': total_price})
-    items_output = [
-        (
-            num,
-            i18n.item.main.cart.page.text(
-                name=item.name,
-                amount=item.amount,
-                price=item.price,
-                total=item.total_item_price,
-            )
-            + '\n',
-        )
-        for num, item in enumerate(items, start=1)
-    ]
+    items_output = []
+    items_amount = []
 
+    for num, item in enumerate(items, start=1):
+        items_amount.append((item.name, item.amount))
+        items_output.append(
+            (
+                num,
+                i18n.item.main.cart.page.text(
+                    name=item.name,
+                    amount=item.amount,
+                    price=item.price,
+                    total=item.total_item_price,
+                )
+                + '\n',
+            )
+        )
+
+    dialog_manager.dialog_data.update(
+        {'total_price': total_price, 'items_amount': items_amount}
+    )
     return {
         'items': items_output,
         'shopping_cart_empty': i18n.shopping.cart.empty.text(),
@@ -121,7 +127,7 @@ async def change_cart_getter(
         'previous_item_exist': item_id > 0 and len(items) > 1,
         'change_amount_button': i18n.cart.item.change.amount(),
         'cart_item_out': i18n.cart.out.button(),
-        'amount_info': i18n.item.amount.cart.text(amount=item.amount)
+        'amount_info': i18n.item.amount.cart.text(amount=item.amount),
     }
 
 

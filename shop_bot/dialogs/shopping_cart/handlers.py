@@ -10,6 +10,7 @@ from db.requests import (
     delete_item_from_cart,
     get_user_cart_info,
 )
+from dialogs.delivery_dialog.states import DeliverySG
 from dialogs.shopping_cart.states import ShoppingCartSG
 
 
@@ -60,30 +61,13 @@ async def show_confirm_alert(
     await callback.answer(text=i18n.old.amount.value.text())
 
 
-async def send_invoice(
+async def place_order(
     callback: CallbackQuery, widget: Button, dialog_manager: DialogManager
 ):
-    prices = [
-        LabeledPrice(
-            label='Товар',
-            amount=dialog_manager.dialog_data.get('total_price') * 100,
-        ),
-    ]
-
-    config: Config = dialog_manager.middleware_data.get('config')
-
-    await callback.bot.send_invoice(
-        chat_id=callback.message.chat.id,
-        title='Покупка товара',
-        description='Описание товара',
-        payload='test_payload',
-        provider_token=config.payment.token,
-        currency='RUB',
-        prices=prices,
-        start_parameter='test-payment',
-        need_name=True,
-        need_phone_number=True,
-        need_email=True,
-        need_shipping_address=True,
-        is_flexible=True,
+    await dialog_manager.start(
+        state=DeliverySG.name,
+        data={
+            'total_price': dialog_manager.dialog_data.get('total_price'),
+            'items_amount': dialog_manager.dialog_data.get('items_amount'),
+        },
     )
