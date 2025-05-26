@@ -7,3 +7,4 @@ redis
 environs
 django-cleanup
 yookassa
+psycopg2-binary
