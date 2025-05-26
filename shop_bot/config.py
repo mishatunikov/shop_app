@@ -16,6 +16,7 @@ class BotSetting:
 
     token: str
     redis: bool
+    chanel: str
 
 
 @dataclass
@@ -32,6 +33,10 @@ def load_config() -> Config:
     env = Env()
     env.read_env()
     return Config(
-        BotSetting(token=env.str('BOT_TOKEN'), redis=env.bool('REDIS')),
+        BotSetting(
+            token=env.str('BOT_TOKEN'),
+            redis=env.bool('REDIS'),
+            chanel=env.str('CHANEL'),
+        ),
         PaymentSettings(token=env.str('YOOKASSA_TOKEN')),
     )
