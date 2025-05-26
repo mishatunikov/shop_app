@@ -133,6 +133,8 @@ class Item(BaseName, CreatedUpdatedAt):
 
 
 class ShoppingCartItems(CreatedUpdatedAt):
+    """Binds users and items, realize shopping cart."""
+
     user = models.ForeignKey(
         TgUser, on_delete=models.CASCADE, related_name='shopping_cart_items'
     )
@@ -155,3 +157,23 @@ class ShoppingCartItems(CreatedUpdatedAt):
                 name='unique_item_shopping_cart',
             )
         ]
+
+
+class QuestionAnswer(models.Model):
+    """Contains questions and answer to them."""
+
+    question = models.CharField(
+        max_length=consts.MAX_LENGTH_QUESTION,
+        unique=True,
+        verbose_name='вопрос',
+    )
+    answer = models.CharField(
+        max_length=consts.MAX_LENGTH_ANSWER, verbose_name='ответ'
+    )
+
+    class Meta:
+        verbose_name = 'вопрос-ответ'
+        verbose_name_plural = 'FAQ'
+
+    def __str__(self):
+        return self.question

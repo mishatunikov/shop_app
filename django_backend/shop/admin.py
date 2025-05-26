@@ -1,7 +1,14 @@
 from django.contrib import admin
 from django.db.models import Count, Sum
 
-from shop.models import Category, Item, ShoppingCartItems, Subcategory, TgUser
+from shop.models import (
+    Category,
+    Item,
+    ShoppingCartItems,
+    Subcategory,
+    TgUser,
+    QuestionAnswer,
+)
 
 
 class InlineShoppingCart(admin.TabularInline):
@@ -95,3 +102,4 @@ class TgUserAdmin(admin.ModelAdmin):
 
 
 admin.site.empty_value_display = 'Не задано'
+admin.site.register(QuestionAnswer)
