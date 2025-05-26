@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 async def save_order_to_excel(
     order_data,
-    file_path='orders.xlsx',
+    file_path='orders_data/orders.xlsx',
 ):
     file = Path(file_path)
 
