@@ -8,20 +8,6 @@ from dialogs.catalog_dialog.states import CatalogSG
 from dialogs.shopping_cart.states import ShoppingCartSG
 
 
-async def back(
-    callback: CallbackQuery,
-    widget: Button,
-    dialog_manager: DialogManager,
-):
-    if widget.widget_id == 'back_to_categories':
-        dialog_manager.start_data['subcategory_page_id'] = 0
-
-    if widget.widget_id == 'back_to_subcategory':
-        dialog_manager.start_data.update({'items_page_id': 0, 'item_count': 0})
-
-    await dialog_manager.back()
-
-
 async def choose_category(
     callback: CallbackQuery,
     widget: Select,

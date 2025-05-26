@@ -92,11 +92,3 @@ async def start_payment(
         await callback.message.delete()
     else:
         await callback.answer(i18n.how.to.pay.text())
-
-
-async def back(
-    callback: CallbackQuery, widget: Button, dialog_manager: DialogManager
-):
-    if data := dialog_manager.dialog_data.get('delivery_data_messages'):
-        data.pop()
-    await dialog_manager.back()

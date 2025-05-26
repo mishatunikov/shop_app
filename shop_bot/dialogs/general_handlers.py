@@ -36,6 +36,16 @@ async def change_page(
             widget.widget_id
         ]
 
+    if widget.widget_id in (
+        widget_offset := {
+            'faq_previous_page': -1,
+            'faq_next_page': 1,
+        }
+    ):
+        dialog_manager.start_data['faq_page_id'] += widget_offset[
+            widget.widget_id
+        ]
+
 
 async def change_item_amount(
     callback: CallbackQuery,
@@ -53,3 +63,30 @@ async def show_alert_increase(
 ):
     i18n: TranslatorRunner = dilog_manager.middleware_data.get('i18n')
     await callback.answer(text=i18n.decrease.button.alert())
+
+
+async def back(
+    callback: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+):
+    if widget.widget_id == 'back_to_categories':
+        dialog_manager.start_data['subcategory_page_id'] = 0
+
+    if widget.widget_id == 'back_to_subcategory':
+        dialog_manager.start_data.update({'items_page_id': 0, 'item_count': 0})
+
+    if widget.widget_id in (
+        'number_input_back',
+        'city_input_back',
+        'street_input_back',
+        'house_input_back',
+        'flat_input_back',
+    ):
+        if data := dialog_manager.dialog_data.get('delivery_data_messages'):
+            data.pop()
+
+    if widget.widget_id == 'back_from_faq':
+        dialog_manager.start_data.update({'faq_page_id': 0})
+
+    await dialog_manager.back()
