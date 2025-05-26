@@ -8,9 +8,7 @@ import django
 DJANGO_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(DJANGO_BACKEND_DIR / 'django_backend'))
 
-os.environ.setdefault(
-    'DJANGO_SETTINGS_MODULE', 'django_backend.settings'
-)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_backend.settings')
 os.environ.update({'DJANGO_ALLOW_ASYNC_UNSAFE': 'true'})
 django.setup()
 
@@ -29,7 +27,14 @@ from django.db.models import (
 )
 from django.db.models import IntegerField, DecimalField
 
-from shop.models import TgUser, Category, Subcategory, Item, ShoppingCartItems
+from shop.models import (
+    TgUser,
+    Category,
+    Subcategory,
+    Item,
+    ShoppingCartItems,
+    QuestionAnswer,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -168,3 +173,18 @@ def change_item_amount(tg_id: int, item_id: int, amount) -> None:
     instance = ShoppingCartItems.objects.get(user_id=tg_id, item_id=item_id)
     instance.amount = amount
     instance.save()
+
+
+@sync_to_async
+def get_faq() -> tuple[tuple, bool]:
+    queryset = QuestionAnswer.objects.all()
+    exist = queryset.exists()
+    questions = (
+        () if not exist else queryset.values_list('question', flat=True)
+    )
+    return questions, queryset.exists()
+
+
+@sync_to_async
+def get_answer(question: str) -> str:
+    return QuestionAnswer.objects.get(question=question).answer
