@@ -8,10 +8,16 @@ from aiogram_dialog import setup_dialogs
 from fluentogram import TranslatorHub
 
 from config import Config, load_config
-from dialogs import catalog_dialog, shopping_cart_dialog, start_dialog
+from dialogs import (
+    catalog_dialog,
+    shopping_cart_dialog,
+    start_dialog,
+    delivery_dialog,
+)
+from fsm import storage
 from handlers.user_handlers import router as user_router
 from locales.i18n import create_translator_hub
-from middlewares.outer import TranslatorRunnerMiddleware
+from middlewares.outer import TranslatorRunnerMiddleware, CheckSubscription
 
 logger = logging.getLogger(__name__)
 
@@ -31,18 +37,24 @@ async def main():
     )
     translator_hub: TranslatorHub = create_translator_hub()
 
-    dp = Dispatcher()
+    dp = Dispatcher(storage=storage)
     dp.workflow_data.update(
         {'_translator_hub': translator_hub, 'config': config}
     )
 
     logger.info('Покдлючение роутеров и диалогов')
     dp.include_routers(
-        user_router, start_dialog, catalog_dialog, shopping_cart_dialog
+        user_router,
+        start_dialog,
+        catalog_dialog,
+        shopping_cart_dialog,
+        delivery_dialog,
     )
     setup_dialogs(dp)
 
     logger.info('Подключение миддлварей')
+    dp.message.outer_middleware(CheckSubscription())
+    dp.callback_query.outer_middleware(CheckSubscription())
     dp.update.middleware(TranslatorRunnerMiddleware())
 
     await dp.start_polling(bot)
