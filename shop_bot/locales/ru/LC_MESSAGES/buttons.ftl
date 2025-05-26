@@ -16,6 +16,9 @@ clean-shopping-cart-button = Очистить корзину 🧹
 cart-out-button = Удалить из корзины ❌
 cart-item-change-amount = Изменить количество 🔄
 
+# delivery buttons
+payment-button = Перейти к оплате 💳
+
 # general buttons
 main-menu-button = В главное меню 🏠
 back-button = Вернуться назад 🔙
@@ -26,3 +29,5 @@ no-button = Нет ❌
 increase-button = ➕
 decrease-button = ➖
 confirm-button = Подтвердить ✅
+cancel-button = Отмена ❌
+
