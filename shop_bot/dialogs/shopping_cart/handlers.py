@@ -1,9 +1,8 @@
-from aiogram.types import CallbackQuery, LabeledPrice
+from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.kbd import Button
 from fluentogram import TranslatorRunner
 
-from config import Config
 from db.requests import (
     change_item_amount,
     clean_shopping_cart,

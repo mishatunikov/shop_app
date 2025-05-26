@@ -19,8 +19,8 @@ from dialogs.shopping_cart.handlers import (
     change_shopping_cart,
     clean_cart,
     confirm_amount_changing,
-    remove_item,
     place_order,
+    remove_item,
     show_confirm_alert,
 )
 from dialogs.shopping_cart.states import ShoppingCartSG

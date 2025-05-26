@@ -1,35 +1,26 @@
 from aiogram.enums import ContentType
-from aiogram_dialog import Window, Dialog, DialogManager
+from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import (
-    Button,
-    Row,
-    Cancel,
-    Back,
-    SwitchTo,
-    Next,
-)
+from aiogram_dialog.widgets.kbd import Back, Button, Cancel, Next
 from aiogram_dialog.widgets.text import Format
-from aiogram_dialog import StartMode
-from aiogram.fsm.state import State, StatesGroup
 
 from dialogs.delivery_dialog.filters import (
     IsAlpha,
-    IsPhoneNumber,
     IsNumber,
     IsNumberOrNotExist,
+    IsPhoneNumber,
 )
 from dialogs.delivery_dialog.getters import (
-    delivery_getter,
     confirmation_getter,
+    delivery_getter,
     payment_getter,
 )
 from dialogs.delivery_dialog.handlers import (
+    back,
     correct_input,
     incorrect_input,
     not_text_input,
     start_payment,
-    back,
 )
 from dialogs.delivery_dialog.states import DeliverySG
 
@@ -94,7 +85,7 @@ delivery_dialog = Dialog(
         MessageInput(
             func=correct_input,
             content_types=ContentType.TEXT,
-            filter=IsNumber().__call__,
+            filter=IsNumber(),
         ),
         MessageInput(func=incorrect_input, content_types=ContentType.TEXT),
         MessageInput(func=not_text_input, content_types=ContentType.ANY),

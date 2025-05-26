@@ -1,4 +1,4 @@
-from aiogram.types import Message, CallbackQuery, LabeledPrice
+from aiogram.types import CallbackQuery, LabeledPrice, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button
@@ -62,6 +62,7 @@ async def not_text_input(
 async def start_payment(
     callback: CallbackQuery, widget: Button, dialog_manager: DialogManager
 ):
+    i18n: TranslatorRunner = dialog_manager.middleware_data.get('i18n')
     if not dialog_manager.dialog_data.get('payment_button_pressed'):
         dialog_manager.dialog_data.update({'payment_button_pressed': True})
         prices = [
@@ -90,7 +91,7 @@ async def start_payment(
         )
         await callback.message.delete()
     else:
-        await callback.answer('Используйте кнопку  выше для оплаты ⬆')
+        await callback.answer(i18n.how.to.pay.text())
 
 
 async def back(

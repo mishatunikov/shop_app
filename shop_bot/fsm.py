@@ -1,9 +1,9 @@
 from aiogram.fsm.storage.base import DefaultKeyBuilder
 from aiogram.fsm.storage.memory import MemoryStorage
-from redis.asyncio import Redis
 from aiogram.fsm.storage.redis import RedisStorage
+from redis.asyncio import Redis
 
-from config import load_config, Config
+from config import Config, load_config
 
 config: Config = load_config()
 

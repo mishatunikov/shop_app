@@ -3,7 +3,6 @@ from pathlib import Path
 from fluent_compiler.bundle import FluentBundle
 from fluentogram import FluentTranslator, TranslatorHub
 
-
 CURRENT_PATH = Path(__file__).resolve().parent
 
 

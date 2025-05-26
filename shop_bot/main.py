@@ -10,14 +10,14 @@ from fluentogram import TranslatorHub
 from config import Config, load_config
 from dialogs import (
     catalog_dialog,
+    delivery_dialog,
     shopping_cart_dialog,
     start_dialog,
-    delivery_dialog,
 )
 from fsm import storage
 from handlers.user_handlers import router as user_router
 from locales.i18n import create_translator_hub
-from middlewares.outer import TranslatorRunnerMiddleware, CheckSubscription
+from middlewares.outer import CheckSubscription, TranslatorRunnerMiddleware
 
 logger = logging.getLogger(__name__)
 

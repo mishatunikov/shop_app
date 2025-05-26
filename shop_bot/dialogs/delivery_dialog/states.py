@@ -10,4 +10,3 @@ class DeliverySG(StatesGroup):
     flat = State()
     confirmation_delivery_data = State()
     payment = State()
-

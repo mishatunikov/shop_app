@@ -1,5 +1,4 @@
 import re
-from string import digits
 
 from aiogram.filters import BaseFilter
 from aiogram.types import Message

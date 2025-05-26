@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
-from openpyxl.utils import get_column_letter
 
 logger = logging.getLogger(__name__)
 
@@ -40,9 +39,7 @@ async def save_order_to_excel(
         1 if last_row == 1 else ws.cell(row=last_row, column=1).value + 1
     )
 
-    name, phone, city, street, house, flat, items, total_price = (
-        order_data
-    )
+    name, phone, city, street, house, flat, items, total_price = order_data
 
     for name_item, amount in items:
         ws.append(
