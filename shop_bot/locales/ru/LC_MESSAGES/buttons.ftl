@@ -1,7 +1,7 @@
 # start dialog
 catalog-button = Каталог 🛍
 shopping-cart-button = Корзина 🛒
-reference-button = Справка ℹ
+faq-button = FAQ❔
 
 # category dialog
 decrease-button-alert = 🤏 Уже самый минимум. Дальше — вакуум!

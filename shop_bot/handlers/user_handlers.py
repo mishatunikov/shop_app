@@ -12,7 +12,7 @@ from aiogram_dialog import DialogManager, StartMode
 
 from db.requests import add_or_create_user, clean_shopping_cart
 from dialogs.start_dialog.states import StartSG
-from dialogs.utils import save_order_to_excel
+from utils import save_order_to_excel
 
 router = Router()
 
@@ -31,7 +31,7 @@ async def start(message: Message, dialog_manager: DialogManager):
     await dialog_manager.start(
         state=StartSG.main_menu,
         mode=StartMode.RESET_STACK,
-        data={'first_open': True},
+        data={'first_open': True, 'faq_page_id': 0},
     )
 
 
