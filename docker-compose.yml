@@ -1,6 +1,7 @@
 volumes:
   postgres_data:
   redis_data:
+  media:
 
 services:
   db:
@@ -10,6 +11,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $POSTGRES_USER -d $POSTGRES_DB'"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis
@@ -25,13 +31,20 @@ services:
       - db
       - redis
     env_file: .env
+    volumes:
+      - media:/app/django_backend/media/
+      - ./orders_data:/app/orders_data/
 
   django:
     build:
       dockerfile: Dockerfile.backend
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     env_file: .env
+    volumes:
+      - media:/app/media/
 
