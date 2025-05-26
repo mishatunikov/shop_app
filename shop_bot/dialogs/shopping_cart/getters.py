@@ -27,7 +27,7 @@ async def cart_main_page_getter(
                 i18n.item.main.cart.page.text(
                     name=item.name,
                     amount=item.amount,
-                    price=item.price,
+                    price=float(item.price),
                     total=item.total_item_price,
                 )
                 + '\n',
@@ -35,7 +35,7 @@ async def cart_main_page_getter(
         )
 
     dialog_manager.dialog_data.update(
-        {'total_price': total_price, 'items_amount': items_amount}
+        {'total_price': float(total_price), 'items_amount': items_amount}
     )
     return {
         'items': items_output,
@@ -48,7 +48,7 @@ async def cart_main_page_getter(
         'change_cart_button': i18n.change.shopping.cart.button(),
         'clean_cart_button': i18n.clean.shopping.cart.button(),
         'items_total_price': i18n.items.total.price.text(
-            total_price=total_price
+            total_price=float(total_price)
         ),
         'main_menu_button': i18n.main.menu.button(),
     }
@@ -93,7 +93,7 @@ async def change_cart_getter(
     event_from_user: User,
     **kwargs,
 ):
-    items, _, total_amount, total_price = await get_shopping_cart_items(
+    items, *_, = await get_shopping_cart_items(
         tg_id=event_from_user.id
     )
     item_id = dialog_manager.start_data.get('items_page_id')
@@ -105,7 +105,7 @@ async def change_cart_getter(
                 'name': item.name,
                 'description': item.description,
                 'image_path': item.image.path,
-                'price': item.price,
+                'price': float(item.price),
                 'amount': item.amount,
             }
         }
@@ -117,7 +117,7 @@ async def change_cart_getter(
         'item_info': i18n.item.info.text(
             name=item.name,
             description=item.description,
-            price=item.price,
+            price=float(item.price),
         ),
         'image': item.image.path,
         'back': i18n.back.button(),

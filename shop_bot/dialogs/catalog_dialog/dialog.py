@@ -19,7 +19,6 @@ from dialogs.catalog_dialog.getters import (
     subcategories_getter,
 )
 from dialogs.catalog_dialog.handlers import (
-    back,
     choose_category,
     choose_subcategory,
     open_shopping_cart,
@@ -27,6 +26,7 @@ from dialogs.catalog_dialog.handlers import (
 )
 from dialogs.catalog_dialog.states import CatalogSG
 from dialogs.general_handlers import (
+    back,
     change_item_amount,
     change_page,
     show_alert_increase,

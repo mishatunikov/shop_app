@@ -73,7 +73,7 @@ async def items_getter(
     item = items[item_number]
     dialog_manager.dialog_data['selected_item_data'] = {
         'name': item.name,
-        'price': item.price,
+        'price': float(item.price),
         'description': item.description,
         'id': item.id,
         'image_path': item.image.path,
@@ -86,7 +86,7 @@ async def items_getter(
         'item_info': i18n.item.info.text(
             name=item.name,
             description=item.description,
-            price=item.price,
+            price=float(item.price),
         ),
         'image': item.image.path,
         'back': i18n.back.button(),

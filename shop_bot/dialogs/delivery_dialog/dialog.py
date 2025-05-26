@@ -16,13 +16,13 @@ from dialogs.delivery_dialog.getters import (
     payment_getter,
 )
 from dialogs.delivery_dialog.handlers import (
-    back,
     correct_input,
     incorrect_input,
     not_text_input,
     start_payment,
 )
 from dialogs.delivery_dialog.states import DeliverySG
+from dialogs.general_handlers import back
 
 delivery_dialog = Dialog(
     Window(
