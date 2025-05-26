@@ -4,10 +4,10 @@ from django.db.models import Count, Sum
 from shop.models import (
     Category,
     Item,
+    QuestionAnswer,
     ShoppingCartItems,
     Subcategory,
     TgUser,
-    QuestionAnswer,
 )
 
 

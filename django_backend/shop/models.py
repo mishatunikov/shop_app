@@ -172,6 +172,7 @@ class QuestionAnswer(models.Model):
     )
 
     class Meta:
+        ordering = ('question',)
         verbose_name = 'вопрос-ответ'
         verbose_name_plural = 'FAQ'
 
